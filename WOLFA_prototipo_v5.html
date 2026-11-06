@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#171021">
+<title>WOLFA — Central de Comando</title>
+<style>
+:root{--bg:#171021;--panel:#24182f;--panel2:#30203c;--card:#382449;--text:#fff;--muted:#c5a5d7;--accent:#d99cff;--accent2:#ff75b5;--line:#493153;--good:#8de0b2;--shadow:0 18px 55px #09050e66}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0%,#46245a 0,transparent 34%),radial-gradient(circle at 95% 20%,#382044 0,transparent 30%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
+button,input,select,textarea{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:auto;padding:22px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}.brand{display:flex;align-items:center;gap:13px}.wolfmark{width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,#9c50c9,#ed70b5);display:grid;place-items:center;font-size:31px;box-shadow:0 8px 30px #b65bdb55}.brand h1{font-size:27px;letter-spacing:3px;margin:0}.brand small,.muted{color:var(--muted)}.brand small{font-size:10px;letter-spacing:1.5px}.status{border:1px solid #4d805f;background:#193c2c;color:#a5f0c2;padding:7px 11px;border-radius:99px;font-size:11px;font-weight:800;letter-spacing:.7px}
+.panel{background:linear-gradient(145deg,#2c1d38ee,#21162bed);border:1px solid var(--line);border-radius:23px;padding:22px;box-shadow:var(--shadow)}.hero{display:grid;grid-template-columns:1.25fr .75fr;gap:18px;margin-bottom:18px}.eyebrow{color:var(--accent);font-size:11px;font-weight:900;letter-spacing:1.5px}.hero h2{font-size:clamp(25px,4vw,39px);line-height:1.08;margin:12px 0}.hero p{color:#d8c5e2;line-height:1.6;margin:0}.wolf-note{background:linear-gradient(135deg,#623583,#a44789);border-radius:20px;padding:20px;display:flex;flex-direction:column;justify-content:space-between;min-height:180px}.wolf-note .face{font-size:46px}.wolf-note strong{font-size:18px}.wolf-note p{color:#fff;margin-top:7px;font-size:13px}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.nav button,.btn{border:1px solid var(--line);border-radius:12px;padding:10px 14px;background:#30203c;color:var(--text);font-weight:750}.nav button.active,.btn.primary{background:linear-gradient(135deg,#914ac0,#c85b9f);border-color:transparent}.btn.secondary{background:transparent}.btn.good{background:#1c4934;border-color:#397b56}.btn:disabled{opacity:.45;cursor:not-allowed}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}.stat{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:17px}.stat b{display:block;font-size:27px;color:var(--accent);margin-bottom:4px}.stat span{font-size:12px;color:var(--muted)}h3{margin:0 0 14px;font-size:18px}.field{display:flex;flex-direction:column;gap:7px;margin:12px 0}.field label{font-size:12px;color:var(--muted);font-weight:750}.field input,.field select,.field textarea{width:100%;background:#1a1123;color:var(--text);border:1px solid #594166;border-radius:11px;padding:12px;outline:none}.field input:focus,.field select:focus{border-color:var(--accent)}.formrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}.moods{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.mood{background:#382449;border:1px solid #594166;color:white;border-radius:14px;padding:13px 7px;display:flex;flex-direction:column;align-items:center;gap:5px}.mood span{font-size:27px}.mood small{font-size:12px}.mood.selected{border:2px solid var(--accent);background:#523465}.range-row{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.range{width:100%;accent-color:#d99cff}.task-list{display:flex;flex-direction:column;gap:9px}.task{display:flex;align-items:center;gap:11px;background:var(--card);padding:12px;border:1px solid var(--line);border-radius:13px}.task time{color:var(--accent);font-weight:900;font-variant-numeric:tabular-nums}.task .taskname{flex:1}.task small{display:block;color:var(--muted);margin-top:3px}.task.done .taskname{text-decoration:line-through;opacity:.55}.task input{accent-color:#d99cff;width:18px;height:18px}.empty{padding:22px;text-align:center;background:#30203c;border-radius:14px;color:var(--muted);font-size:13px}.calendar-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.calendar-head input{max-width:170px}.daychips{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:12px 0}.daychip{padding:9px 2px;text-align:center;border-radius:10px;background:#30203c;border:1px solid var(--line);font-size:11px;color:var(--muted)}.daychip.active{background:#78429b;color:#fff;border-color:#d99cff}.progress{height:9px;background:#594165;border-radius:99px;overflow:hidden}.progress div{height:100%;background:linear-gradient(90deg,#a45ad0,#ff81bd);width:0%;transition:width .25s}.hidden{display:none!important}.mood-history{display:flex;gap:7px;flex-wrap:wrap}.mood-pill{background:#382449;border:1px solid var(--line);padding:8px 10px;border-radius:12px;font-size:12px}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#fff;color:#24182f;padding:11px 16px;border-radius:12px;font-weight:800;box-shadow:var(--shadow);z-index:10}.footer{text-align:center;color:#9c82aa;font-size:11px;padding:22px}
+body.theme-light{--bg:#f5eff9;--panel:#fff;--panel2:#fff;--card:#f2e8f8;--text:#281a32;--muted:#745b83;--line:#e1cfe9;background:linear-gradient(135deg,#fdf8ff,#f2e9fb)}
+body.theme-light .panel{background:#ffffffed}body.theme-light .field input,body.theme-light .field select{background:#fff;color:#281a32}body.theme-light .mood,body.theme-light .task,body.theme-light .stat,body.theme-light .daychip{color:#281a32}
+body.theme-ocean{--bg:#071d2a;--panel:#102d3b;--panel2:#12384a;--card:#164456;--text:#f2fcff;--muted:#a4d7e5;--accent:#78e2ef;--accent2:#55b7d4;--line:#286174;background:radial-gradient(circle at 10% 0%,#14516a,transparent 40%),#071d2a}
+body.theme-sunset{--bg:#281522;--panel:#3a1e2c;--panel2:#4b2634;--card:#593044;--text:#fff6f0;--muted:#f3b9ae;--accent:#ffbd83;--accent2:#ff7d91;--line:#754153;background:radial-gradient(circle at 10% 0%,#8b3f48,transparent 38%),#281522}
+@media(max-width:760px){.app{padding:14px}.hero,.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr);gap:8px}.stat{padding:12px}.stat b{font-size:22px}.panel{padding:17px}.topbar{align-items:flex-start}.status{font-size:9px}.brand h1{font-size:23px}.formrow{grid-template-columns:1fr 1fr}}
+@media(max-width:420px){.formrow{grid-template-columns:1fr}.moods{gap:6px}.mood{padding:10px 4px}.mood span{font-size:24px}}
+
+.celebrate-overlay{position:fixed;inset:0;display:grid;place-items:center;pointer-events:none;z-index:100;font-size:clamp(42px,9vw,88px);font-weight:900;text-shadow:0 8px 35px #0008;animation:celebratePop 1.8s ease-out forwards}
+@keyframes celebratePop{0%{opacity:0;transform:scale(.25) rotate(-15deg)}18%{opacity:1;transform:scale(1.12) rotate(5deg)}70%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.85) translateY(-35px)}}
+.confetti{position:fixed;top:-15px;width:9px;height:14px;z-index:99;pointer-events:none;animation:confettiFall 1.8s ease-in forwards;border-radius:2px}
+@keyframes confettiFall{to{transform:translate(var(--drift),105vh) rotate(720deg);opacity:.1}}
+.tag{display:inline-block;padding:3px 8px;border-radius:99px;background:#634078;color:#f5ddff;font-size:10px;font-weight:800}
+.diary-q{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:12px;margin:10px 0}
+.diary-q label{display:block;color:var(--muted);font-size:12px;font-weight:800;margin-bottom:7px}
+.diary-q input,.diary-q select,.diary-q textarea{width:100%;background:#1a1123;color:var(--text);border:1px solid #594166;border-radius:10px;padding:10px}
+.week-score{font-size:30px;color:var(--accent);font-weight:900}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+  <div class="brand"><div class="wolfmark">🐺</div><div><h1>WOLFA</h1><small>SUA VIDA. SUAS REGRAS. SEU CAOS.</small></div></div>
+  <div class="status">● PROTÓTIPO INTERATIVO</div>
+</header>
+
+<section id="checkin" class="panel">
+  <div class="eyebrow">01 · CHECK-IN EMOCIONAL</div>
+  <h2>Olá, criatura!<br><span style="color:var(--accent)">Como está essa cabecinha hoje?</span></h2>
+  <p class="muted">Antes de conquistar o mundo, vamos descobrir como está o comandante. E não vale responder “vivendo” sem dar explicações. 😂</p>
+  <div class="moods" id="moods" style="margin:18px 0">
+    <button class="mood" data-mood="Feliz"><span>😁</span><small>Feliz</small></button>
+    <button class="mood" data-mood="Animado"><span>😎</span><small>Animado</small></button>
+    <button class="mood" data-mood="Tranquilo"><span>😌</span><small>Tranquilo</small></button>
+    <button class="mood" data-mood="Neutro"><span>😐</span><small>Neutro</small></button>
+    <button class="mood" data-mood="Sensível"><span>🥺</span><small>Sensível</small></button>
+    <button class="mood" data-mood="Triste"><span>😢</span><small>Triste</small></button>
+    <button class="mood" data-mood="Irritado"><span>😤</span><small>Irritado</small></button>
+    <button class="mood" data-mood="Sobrecarregado"><span>😵</span><small>Sobrecarregado</small></button>
+    <button class="mood" data-mood="Exausto"><span>🫠</span><small>Exausto</small></button>
+  </div>
+  <div class="field"><div class="range-row"><label for="intensity">Intensidade do humor</label><strong id="intensityValue">65%</strong></div><input id="intensity" class="range" type="range" min="0" max="100" step="5" value="65"></div>
+  <button class="btn primary" id="startBtn" disabled>Entrar na central de comando →</button>
+  <p class="muted" style="font-size:11px;margin-top:12px">Seu check-in será salvo no histórico emocional deste dispositivo.</p>
+</section>
+
+<main id="dashboard" class="hidden">
+  <section class="hero">
+    <div class="panel"><div class="eyebrow">CENTRAL DE COMANDO</div><h2 id="greeting">Bom dia, criatura.</h2><p id="wolfLine">Vamos organizar esse caos com elegância e um pouquinho de drama.</p>
+      <div class="nav" aria-label="Navegação">
+        <button class="active" data-tab="home">Visão geral</button><button data-tab="calendar">Calendário</button><button data-tab="diary">Diário</button><button data-tab="weekly">Semana</button><button data-tab="missions">Missões</button><button data-tab="reports">Humor & dados</button><button data-tab="settings">Personalizar</button>
+      </div>
+    </div>
+    <div class="wolf-note"><div class="face">🐺✨</div><div><strong>WOLFA comenta:</strong><p id="quote">“A vida não vem com manual, mas pelo menos agora tem calendário.”</p></div></div>
+  </section>
+
+  <section id="tab-home">
+    <div class="stats">
+      <div class="stat"><b id="taskCount">0</b><span>Atividades no dia</span></div>
+      <div class="stat"><b id="doneCount">0</b><span>Missões concluídas</span></div>
+      <div class="stat"><b id="xpCount">0 XP</b><span>Experiência acumulada</span></div>
+    </div>
+    <div class="grid">
+      <section class="panel"><div class="calendar-head"><h3>📅 Hoje na agenda</h3><button class="btn secondary" data-goto="calendar">Ver calendário</button></div><div id="todayTasks" class="task-list"></div></section>
+      <section class="panel"><h3>🎯 Progresso das missões</h3><p class="muted" style="font-size:13px">Cada atividade concluída vale 25 XP. Pequenos passos também contam.</p><div class="progress"><div id="progressBar"></div></div><p id="levelText" class="muted" style="font-size:12px;margin-top:10px">Nível 1 · Iniciante</p><div class="mood-history" id="todayMood" style="margin-top:15px"></div></section>
+    </div>
+    <section class="panel" style="margin-top:18px"><h3>🧭 Seu ritmo nesta semana</h3><p id="homeWeekly" class="muted" style="font-size:13px">Registre atividades para acompanhar seu ritmo.</p><button class="btn secondary" data-goto="weekly">Ver fechamento semanal →</button></section>
+  </section>
+
+  <section id="tab-calendar" class="hidden">
+    <div class="grid">
+      <section class="panel">
+        <div class="calendar-head"><h3>🗓️ Seu calendário</h3><input id="selectedDate" type="date" class="field" style="margin:0"></div>
+        <p class="muted" style="font-size:12px">Organize seu dia inteiro: da meia-noite às 23h.</p>
+        <div class="field"><label for="taskName">Nome da atividade</label><input id="taskName" placeholder="Ex.: Treino de pernas, revisar matéria..."></div>
+        <div class="formrow">
+          <div class="field"><label for="taskTime">Hora de início (opcional)</label><input id="taskTime" type="time" step="60" value="08:00"></div>
+          <div class="field"><label for="taskEndTime">Hora de término (opcional)</label><input id="taskEndTime" type="time" step="60"></div>
+        </div>
+        <div class="field"><label for="taskCategory">Categoria / tema</label><select id="taskCategory"><option>Academia</option><option>Vôlei</option><option>Faculdade</option><option>Trabalho</option><option>Pessoal</option><option>Saúde</option><option>Lazer</option><option>Outro</option></select></div>
+        <p class="muted" style="font-size:11px;margin-top:-5px">As duas horas são opcionais. Você pode registrar uma atividade sem horário ou informar apenas o início.</p>
+        <div class="field"><label for="taskNotes">Observações (opcional)</label><textarea id="taskNotes" rows="2" placeholder="Detalhes, materiais, lembretes..."></textarea></div>
+        <div class="field"><label for="repeat">Repetição</label><select id="repeat"><option value="none">Não repetir</option><option value="daily">Diariamente</option><option value="weekly">Semanalmente</option><option value="monthly">Mensalmente</option><option value="custom">Dias específicos</option></select></div>
+        <div id="customDays" class="field hidden"><label>Repetir nos dias</label><div id="weekdayChecks" style="display:flex;gap:9px;flex-wrap:wrap"></div></div>
+        <button class="btn primary" id="addTask">＋ Adicionar atividade</button>
+      </section>
+      <section class="panel"><h3>⏰ Programação do dia</h3><div id="dayTasks" class="task-list"></div></section>
+    </div>
+  </section>
+
+  <section id="tab-missions" class="hidden">
+    <div class="panel"><div class="eyebrow">JOGUE NO SEU PRÓPRIO RITMO</div><h3>🏆 Missões e recompensas</h3><div class="stats"><div class="stat"><b id="missionXP">0</b><span>XP conquistados</span></div><div class="stat"><b id="missionDone">0</b><span>Atividades concluídas</span></div><div class="stat"><b id="missionLevel">1</b><span>Nível atual</span></div></div><div id="badges" class="task-list"></div></div>
+  </section>
+
+  <section id="tab-diary" class="hidden">
+    <div class="panel"><div class="eyebrow">SEU ESPAÇO, SEM JULGAMENTOS</div><h3>📓 Diário do dia</h3>
+    <p class="muted" style="font-size:13px">Um retrato mais completo do seu dia: fatos, detalhes aleatórios, sentimentos e pensamentos que merecem ficar registrados. Responda o que quiser — não existe obrigação de preencher tudo.</p>
+    <div class="formrow">
+      <div class="diary-q"><label>1. Se hoje tivesse um título, qual seria?</label><input id="diaryTitle" placeholder="Ex.: Entre o caos e pequenas vitórias"></div>
+      <div class="diary-q"><label>2. Qual foi a cor do seu dia?</label><select id="diaryColor"><option value="">Escolha uma cor...</option><option>🟡 Amarelo — leve e alegre</option><option>🔵 Azul — tranquilo ou introspectivo</option><option>🔴 Vermelho — intenso e agitado</option><option>🟢 Verde — renovação e equilíbrio</option><option>🟣 Roxo — criativo e misterioso</option><option>⚫ Preto — pesado ou cansativo</option><option>⚪ Branco — neutro ou sereno</option><option>🩷 Rosa — afeto e delicadeza</option><option>🟠 Laranja — energia e espontaneidade</option><option>🌈 Um pouco de cada</option></select></div>
+    </div>
+    <div class="diary-q"><label>3. Qual emoção mais marcou seu dia — e por quê?</label><textarea id="diaryMood" rows="2" placeholder="Nomeie a emoção e, se quiser, conte o que despertou isso."></textarea></div>
+    <div class="diary-q"><label>4. Qual situação complicada, marcante ou inesperada aconteceu?</label><textarea id="diaryEvent" rows="3" placeholder="O que aconteceu? Como você reagiu? O que ficou disso?"></textarea></div>
+    <div class="formrow">
+      <div class="diary-q"><label>5. O que você fez e merece reconhecimento?</label><textarea id="diaryWin" rows="3" placeholder="Uma conquista, atitude, esforço ou algo que enfrentou."></textarea></div>
+      <div class="diary-q"><label>6. O que aprendeu ou percebeu sobre si?</label><textarea id="diaryLearn" rows="3" placeholder="Um padrão, limite, desejo ou descoberta."></textarea></div>
+    </div>
+    <div class="diary-q"><label>7. Qual foi a coisa mais diferente ou curiosa que você viu hoje?</label><textarea id="diaryDifferent" rows="2" placeholder="Uma cena, pessoa, detalhe, lugar ou coincidência."></textarea></div>
+    <div class="formrow">
+      <div class="diary-q"><label>8. Qual foi a curiosidade ou informação nova do dia?</label><textarea id="diaryCuriosity" rows="2" placeholder="Algo que descobriu, ouviu ou pesquisou."></textarea></div>
+      <div class="diary-q"><label>9. Qual foi o pensamento mais absurdo, aleatório ou engraçado que passou pela sua cabeça?</label><textarea id="diaryAbsurd" rows="2" placeholder="Aqui não existe censura para pensamentos aleatórios 😂"></textarea></div>
+    </div>
+    <div class="formrow">
+      <div class="diary-q"><label>10. Qual momento você gostaria de guardar na memória?</label><textarea id="diaryMoment" rows="2" placeholder="Mesmo que pareça pequeno."></textarea></div>
+      <div class="diary-q"><label>11. Teve alguma conversa, pessoa ou gesto que ficou com você?</label><textarea id="diaryPeople" rows="2" placeholder="O que chamou sua atenção?"></textarea></div>
+    </div>
+    <div class="formrow">
+      <div class="diary-q"><label>12. Qual música, som, cheiro ou sabor representa hoje?</label><input id="diarySenses" placeholder="Uma música, barulho, cheiro ou comida..."></div>
+      <div class="diary-q"><label>13. Como estava sua energia ao longo do dia?</label><select id="diaryEnergy"><option value="">Selecione...</option><option>🔋 Alta e constante</option><option>⚡ Alta, mas acelerada</option><option>🌤️ Oscilou, mas deu para levar</option><option>🪫 Baixa, fiz o possível</option><option>🌀 Mudou bastante durante o dia</option></select></div>
+    </div>
+    <div class="diary-q"><label>14. O que gostaria de deixar mais leve ou resolver amanhã?</label><textarea id="diaryTomorrow" rows="2" placeholder="Uma preocupação, tarefa, conversa ou intenção."></textarea></div>
+    <div class="diary-q"><label>15. Algum detalhe que não quer esquecer? (livre)</label><textarea id="diaryExtra" rows="3" placeholder="Complete a história do seu dia do jeito que quiser..."></textarea></div>
+    <div class="panel" style="background:var(--card);box-shadow:none;margin:16px 0">
+      <h3>🪶 Registro organizado pela WOLFA</h3>
+      <p class="muted" style="font-size:12px">A WOLFA reúne suas respostas em um texto estruturado. Você pode revisar, corrigir, acrescentar detalhes e editar livremente antes de salvar.</p>
+      <button class="btn secondary" id="generateDiarySummary">✨ Organizar minhas respostas</button>
+      <div class="diary-q"><label for="diarySummary">Resumo do dia — totalmente editável</label><textarea id="diarySummary" rows="9" placeholder="Seu registro organizado aparecerá aqui. Você também pode escrever diretamente neste campo."></textarea></div>
+    </div>
+    <button class="btn primary" id="saveDiary">Salvar registro do dia</button>
+    <h3 style="margin-top:22px">📚 Entradas anteriores</h3><div id="diaryEntries" class="task-list"></div></div>
+  </section>
+  <section id="tab-weekly" class="hidden">
+    <div class="panel"><div class="eyebrow">FECHAMENTO DA SEMANA</div><h3>🧭 Seu ritmo, sem rótulos</h3>
+    <p class="muted" style="font-size:13px">A WOLFA identifica padrões de organização e execução. Isso não é diagnóstico psicológico nem avaliação clínica.</p>
+    <div class="panel" style="background:var(--card);box-shadow:none;margin:14px 0"><div class="eyebrow">TERMÔMETRO EMOCIONAL DA SEMANA</div><h3>🌡️ Qual emoção ficou mais aguçada?</h3><div class="week-score" id="weeklyMoodScore">—</div><b id="weeklyMoodLabel">Ainda sem registros suficientes</b><p class="muted" id="weeklyMoodAdvice" style="font-size:13px">Seus check-ins diários aparecerão aqui, com a emoção mais recorrente e sua intensidade média.</p><div class="progress" style="margin-top:12px"><div id="weeklyMoodBar"></div></div><div id="weeklyMoodBreakdown" class="mood-history" style="margin-top:12px"></div></div>
+    <div class="stats"><div class="stat"><b id="wPlanned">0</b><span>Planejadas</span></div><div class="stat"><b id="wDone">0</b><span>Concluídas</span></div><div class="stat"><b id="wPending">0</b><span>Deixadas</span></div></div><div class="stat" style="margin-bottom:14px"><b id="wPostponed">0</b><span>Adiada(s) para outra data</span></div>
+    <div class="panel" style="background:var(--card);box-shadow:none"><div class="week-score" id="wPercent">—</div><b id="wLabel">A análise aparecerá aqui</b><p class="muted" id="wAdvice">Registre e acompanhe suas atividades durante a semana.</p></div>
+    <div class="diary-q"><label>O que funcionou bem nesta semana?</label><textarea id="wGood" rows="2"></textarea></div>
+    <div class="diary-q"><label>O que mais atrapalhou?</label><textarea id="wHard" rows="2"></textarea></div>
+    <div class="diary-q"><label>Qual ajuste realista você quer testar na próxima semana?</label><textarea id="wNext" rows="2"></textarea></div>
+    <button class="btn primary" id="saveWeek">Salvar reflexão semanal</button></div>
+  </section>
+  <section id="tab-reports" class="hidden">
+    <section class="panel" style="margin-bottom:18px"><div class="eyebrow">TERMÔMETRO EMOCIONAL</div><h3>🌡️ Como está seu humor hoje?</h3><p class="muted" style="font-size:12px">Leitura baseada no check-in diário e na intensidade que você registrou.</p><div class="week-score" id="dailyMoodScore">—</div><b id="dailyMoodLabel">Aguardando seu check-in</b><p class="muted" id="dailyMoodAdvice" style="font-size:13px">Registre seu humor na entrada da WOLFA para acompanhar a temperatura emocional do dia.</p><div class="progress" style="margin-top:12px"><div id="dailyMoodBar"></div></div></section>
+    <div class="grid"><section class="panel"><h3>💜 Histórico emocional</h3><p class="muted" style="font-size:12px">Seus check-ins registrados neste dispositivo.</p><div id="moodHistory" class="task-list"></div></section><section class="panel"><h3>📊 Produtividade</h3><div class="stat"><b id="reportTotal">0</b><span>Atividades cadastradas</span></div><div class="stat" style="margin-top:10px"><b id="reportDone">0%</b><span>Taxa de conclusão</span></div><p class="muted" style="font-size:12px;margin-top:12px">Os relatórios evoluirão conforme você registrar atividades e check-ins.</p></section></div>
+  </section>
+
+  <section id="tab-settings" class="hidden">
+    <div class="grid">
+      <section class="panel"><h3>🎨 Aparência</h3><div class="field"><label for="theme">Tema visual</label><select id="theme"><option value="dark">Dark pop</option><option value="light">Claro</option><option value="ocean">Oceanos</option><option value="sunset">Pôr do sol</option></select></div><p class="muted" style="font-size:12px">Sua escolha será lembrada neste navegador.</p></section>
+      <section class="panel"><h3>🎭 Personalidade da WOLFA</h3><div class="field"><label for="tone">Tom de voz</label><select id="tone"><option>Sarcástica</option><option>Dramática</option><option>Filosófica</option><option>Séria e direta</option><option>Carinhosa</option><option>Equilibrada</option></select></div><div class="field"><div class="range-row"><label for="drama">Nível de teatralidade</label><strong id="dramaValue">80%</strong></div><input id="drama" class="range" type="range" min="0" max="100" step="5" value="80"></div></section>
+    </div>
+    <div class="panel" style="margin-top:18px"><h3>💾 Seus dados</h3><p class="muted" style="font-size:13px">Esta versão salva tarefas, humor e preferências no armazenamento local do navegador. Para sincronizar entre celular e computador será necessário conectar uma conta e um banco de dados na nuvem.</p><div class="nav"><button class="btn good" id="exportBtn">⬇ Exportar meus dados</button><button class="btn secondary" id="icsBtn">＋ Exportar agenda (.ics)</button><button class="btn secondary" id="resetBtn">Reiniciar protótipo</button></div></div>
+  </section>
+</main>
+<div class="footer">WOLFA © · Seu caos, sob controle. 🐺<br>Protótipo local — não conectado à nuvem nem ao Google Calendar.</div>
+</div>
+<div id="toast" class="toast hidden"></div>
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const today=()=>new Date().toISOString().slice(0,10);
+const state={mood:null,intensity:65,tasks:[],history:[],done:[],diary:[],weekNotes:[],postponed:[],theme:"dark",tone:"Sarcástica",drama:80};
+const KEY="wolfa-prototype-v1";
+function load(){try{const x=JSON.parse(localStorage.getItem(KEY)||"{}");Object.assign(state,x)}catch(e){}}
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function confetti(){const colors=["#ff72b6","#d99cff","#ffd166","#7ce7d2","#8ab4ff"];for(let i=0;i<65;i++){const p=document.createElement("i");p.className="confetti";p.style.left=Math.random()*100+"vw";p.style.background=colors[i%colors.length];p.style.setProperty("--drift",(Math.random()*220-110)+"px");p.style.animationDelay=(Math.random()*.4)+"s";document.body.appendChild(p);setTimeout(()=>p.remove(),2300)}}
+function celebrate(){const styles=[()=>{confetti();return "🎉✨"},()=> "🎆🎇",()=> "😁🥳😄",()=> "😮‍💨😌💜",()=> "🐺🐺🐺",()=> "💥💣🎊"];const pick=styles[Math.floor(Math.random()*styles.length)];const art=pick();if(art==="🎉✨"){}const el=document.createElement("div");el.className="celebrate-overlay";el.textContent=art;document.body.appendChild(el);setTimeout(()=>el.remove(),1900)}
+function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.remove("hidden");setTimeout(()=>t.classList.add("hidden"),2200)}
+function dateLabel(d){return new Date(d+"T12:00:00").toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long"})}
+function taskOccurs(t,date){const start=t.date||date;if(date<start)return false;if(date===start)return true;if(t.repeat==="daily")return date>start;if(t.repeat==="weekly")return date>t.date&&new Date(date+"T12:00:00").getDay()===new Date(start+"T12:00:00").getDay();if(t.repeat==="monthly")return date>start&&date.slice(8,10)===start.slice(8,10);if(t.repeat==="custom"&&date>start){const d=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"][new Date(date+"T12:00:00").getDay()];return t.days.includes(d)}return false}
+function tasksFor(date){return state.tasks.filter(t=>taskOccurs(t,date)).sort((a,b)=>a.time.localeCompare(b.time))}
+function completed(t,date){return state.done.includes(t.id+"@"+date)}
+function renderTasks(target,date){const list=tasksFor(date);target.innerHTML=list.length?"":"<div class='empty'>🌙 Nenhuma atividade para este dia. Um espaço em branco também pode ser um bom plano.</div>";list.forEach(t=>{const key=t.id+"@"+date,is=completed(t,date),wasDeferred=(state.postponed||[]).some(x=>x.key===key),el=document.createElement("div");el.className="task"+(is?" done":"");el.innerHTML=`<time>${t.time?(escapeHTML(t.time)+(t.endTime?"–"+escapeHTML(t.endTime):"")):"—"}</time><div class="taskname">${escapeHTML(t.name)}<small><span class="tag">${escapeHTML(t.category||"Pessoal")}</span> · ${repeatLabel(t)}${t.notes?"<br>📝 "+escapeHTML(t.notes):""}${wasDeferred?"<br><b>↪ Adiada</b>":""}</small></div><button class="btn secondary defer" ${is||wasDeferred?"disabled":""}>Adiar</button><input type="checkbox" aria-label="Concluir ${escapeHTML(t.name)}" ${is?"checked":""} ${wasDeferred?"disabled":""}>`;el.querySelector("input").addEventListener("change",e=>{if(e.target.checked&&!state.done.includes(key)){state.done.push(key);celebrate();toast("Missão concluída! +25 XP 🐺")}else state.done=state.done.filter(x=>x!==key);save();render()});el.querySelector(".defer").addEventListener("click",()=>{const next=prompt("Para qual data deseja adiar? (AAAA-MM-DD)",date);if(!next)return;if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(next)){toast("Use o formato AAAA-MM-DD.");return}state.postponed=state.postponed||[];state.postponed.push({key,from:date,to:next,name:t.name});state.tasks.push({...t,id:Date.now().toString(36),date:next,repeat:"none",days:[]});save();render();toast("Atividade adiada. Reorganizar também é cuidar de si.")});target.appendChild(el)})}
+function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function repeatLabel(t){return {none:"Não se repete",daily:"Todos os dias",weekly:"Semanalmente",monthly:"Mensalmente",custom:"Dias: "+(t.days||[]).join(", ")}[t.repeat]}
+function render(){const d=$("#selectedDate").value||today(),todayTasks=tasksFor(today()),all=state.tasks.length,done=state.done.length,xp=done*25,level=Math.floor(xp/200)+1;renderWeekly();
+$("#taskCount").textContent=todayTasks.length;$("#doneCount").textContent=state.done.filter(k=>k.endsWith("@"+today())).length;$("#xpCount").textContent=xp+" XP";$("#missionXP").textContent=xp;$("#missionDone").textContent=done;$("#missionLevel").textContent=level;$("#progressBar").style.width=(xp%200/2)+"%";$("#levelText").textContent=`Nível ${level} · ${["Iniciante","Explorador","Estrategista","Lenda"][Math.min(level-1,3)]}`;
+renderTasks($("#todayTasks"),today());renderTasks($("#dayTasks"),d);
+$("#reportTotal").textContent=all;$("#reportDone").textContent=all?Math.round(done/all*100)+"%":"0%";
+$("#todayMood").innerHTML=state.mood?`<span class="mood-pill">${moodEmoji(state.mood)} ${state.mood} · ${state.intensity}%</span>`:"";
+$("#diaryEntries").innerHTML=(state.diary||[]).slice().reverse().map(x=>`<div class="task" style="align-items:flex-start"><div class="taskname"><b>${escapeHTML(x.title||"Dia sem título")}</b><small>${x.date} · ${escapeHTML(x.mood||"Emoção não informada")} ${x.color?"· "+escapeHTML(x.color):""}</small><small style="white-space:pre-wrap">${escapeHTML((x.summary||x.event||"").slice(0,520))}${(x.summary||x.event||"").length>520?"…":""}</small></div><button class="btn secondary edit-diary" data-id="${x.id}">Editar</button></div>`).join("")||"<div class='empty'>Sua primeira página espera por você. ✨</div>";
+$$(".edit-diary").forEach(b=>b.addEventListener("click",()=>{const x=state.diary.find(e=>e.id===b.dataset.id);if(!x)return;editingDiaryId=x.id;editingDiaryDate=x.date;diaryFields.forEach(id=>$("#"+id).value=(x.answers&&x.answers[id])||"");$("#diarySummary").value=x.summary||"";$("#saveDiary").textContent="Atualizar registro";$('[data-tab="diary"]').click();$("#diaryTitle").focus();toast("Registro carregado para edição.")}));
+$("#moodHistory").innerHTML=state.history.length?state.history.slice().reverse().map(h=>`<div class="task"><span style="font-size:22px">${moodEmoji(h.mood)}</span><div class="taskname">${h.mood}<small>${dateLabel(h.date)} · intensidade ${h.intensity}%</small></div></div>`).join(""):"<div class='empty'>Seu histórico começa no próximo check-in.</div>";
+$("#badges").innerHTML=[["🌱","Primeiro passo","Concluir uma atividade",done>=1],["🔥","Dia produtivo","Concluir quatro atividades",done>=4],["👑","Disciplina","Concluir oito atividades",done>=8]].map(b=>`<div class="task"><span style="font-size:24px">${b[0]}</span><div class="taskname"><b>${b[1]}</b><small>${b[2]}</small></div><strong>${b[3]?"✓":"🔒"}</strong></div>`).join("");
+}
+function weeklyData(){const ref=new Date(($("#selectedDate")?.value||today())+"T12:00:00");const start=new Date(ref);start.setDate(ref.getDate()-((ref.getDay()+6)%7));const dates=[];for(let i=0;i<7;i++){const d=new Date(start);d.setDate(start.getDate()+i);dates.push(d.toISOString().slice(0,10))}const items=dates.flatMap(d=>tasksFor(d).map(t=>({t,d})));const done=items.filter(x=>state.done.includes(x.t.id+"@"+x.d)).length;const postponed=(state.postponed||[]).filter(x=>dates.includes(x.from)).length;return {items,done,postponed,pending:Math.max(0,items.length-done-postponed)}}
+const moodWeights={Feliz:82,Animado:92,Tranquilo:68,Neutro:50,Sensível:56,Triste:28,Irritado:22,Sobrecarregado:18,Exausto:12};
+function moodDescription(score){if(score>=85)return "Muito elevado";if(score>=70)return "Positivo e estável";if(score>=55)return "Leve ou moderado";if(score>=40)return "Neutro ou oscilante";if(score>=25)return "Emocionalmente exigente";return "Intenso — merece acolhimento"}
+function renderMoodThermometers(){
+ const d=today(),entry=(state.history||[]).find(h=>h.date===d);
+ if(entry){const score=Math.max(0,Math.min(100,Math.round((moodWeights[entry.mood]??50)*.55+(entry.intensity??50)*.45)));$("#dailyMoodScore").textContent=score+"/100";$("#dailyMoodLabel").textContent=(moodEmoji(entry.mood)+" "+entry.mood+" · "+moodDescription(score));$("#dailyMoodAdvice").textContent=score<35?"Parece ter sido um dia emocionalmente pesado. Vá com gentileza consigo — o número não define você.":score<55?"Um dia mais neutro ou oscilante. Observe o que ajudou e o que drenou sua energia.":score<75?"Há sinais de equilíbrio ou emoções mais leves. Registre o que contribuiu para isso.":"Uma temperatura emocional mais alta e positiva. Aproveite, sem se cobrar manter esse estado sempre.";$("#dailyMoodBar").style.width=score+"%"}
+ else{$("#dailyMoodScore").textContent="—";$("#dailyMoodLabel").textContent="Aguardando seu check-in";$("#dailyMoodAdvice").textContent="Faça seu check-in para a WOLFA estimar a temperatura emocional de hoje." ;$("#dailyMoodBar").style.width="0%"}
+ const ref=new Date(($("#selectedDate")?.value||today())+"T12:00:00"),start=new Date(ref);start.setDate(ref.getDate()-((ref.getDay()+6)%7));const dates=[];for(let i=0;i<7;i++){const dt=new Date(start);dt.setDate(start.getDate()+i);dates.push(dt.toISOString().slice(0,10))}
+ const logs=(state.history||[]).filter(h=>dates.includes(h.date));const groups={};logs.forEach(h=>{const k=h.mood||"Neutro";if(!groups[k])groups[k]={count:0,total:0};groups[k].count++;groups[k].total+=h.intensity??50});
+ const ranked=Object.entries(groups).map(([m,v])=>({m,count:v.count,avg:Math.round(v.total/v.count),weight:(moodWeights[m]??50)*.55+(v.total/v.count)*.45})).sort((a,b)=>(b.count*100+b.weight)-(a.count*100+a.weight));
+ if(ranked.length){const top=ranked[0],score=Math.round(top.weight);$("#weeklyMoodScore").textContent=score+"/100";$("#weeklyMoodLabel").textContent=moodEmoji(top.m)+" Emoção em destaque: "+top.m;$("#weeklyMoodAdvice").textContent=`${top.m} apareceu em ${top.count} de ${logs.length} check-in(s) nesta semana. Intensidade média registrada: ${top.avg}%. Isso indica recorrência nos registros, não define como você é nem explica sozinho o motivo.`;$("#weeklyMoodBar").style.width=score+"%";$("#weeklyMoodBreakdown").innerHTML=ranked.map(x=>`<span class="mood-pill">${moodEmoji(x.m)} ${escapeHTML(x.m)} · ${x.count}x</span>`).join("")}
+ else{$("#weeklyMoodScore").textContent="—";$("#weeklyMoodLabel").textContent="Ainda sem registros suficientes";$("#weeklyMoodAdvice").textContent="Faça check-ins ao longo da semana para identificar qual emoção apareceu com mais frequência e intensidade." ;$("#weeklyMoodBar").style.width="0%";$("#weeklyMoodBreakdown").innerHTML=""}
+}
+function renderWeekly(){renderMoodThermometers();const w=weeklyData(),pct=w.items.length?Math.round(w.done/w.items.length*100):0;$("#wPlanned").textContent=w.items.length;$("#wDone").textContent=w.done;$("#wPending").textContent=w.pending;$("#wPostponed").textContent=w.postponed;$("#wPercent").textContent=w.items.length?pct+"%":"—";let label="Ainda sem dados suficientes",advice="Cadastre atividades durante a semana para observar seu ritmo.";if(w.items.length){if(pct>=80){label="Ritmo focado";advice="Você concluiu a maior parte do que planejou. Observe também se esse ritmo está sustentável."}else if(pct>=45){label="Ritmo em equilíbrio";advice="Houve avanços e pendências. Identifique o que ajudou e o que dificultou."}else if(w.pending>=3){label="Semana com sinais de adiamento";advice="Pendências podem indicar sobrecarga, prioridades pouco claras ou estimativas apertadas — não falta de capacidade."}else{label="Ritmo irregular";advice="Experimente reduzir o tamanho das metas e reservar margens de tempo."}}$("#wLabel").textContent=label;$("#wAdvice").textContent=advice;const hw=$("#homeWeekly");if(hw)hw.textContent=w.items.length?`${label}: ${w.done} de ${w.items.length} atividades concluídas (${pct}%). ${advice}`:"Ainda sem dados suficientes nesta semana."}
+function moodEmoji(m){return {Feliz:"😁",Animado:"😎",Tranquilo:"😌",Neutro:"😐",Sensível:"🥺",Triste:"😢",Irritado:"😤",Sobrecarregado:"😵",Exausto:"🫠"}[m]||"💜"}
+function setTheme(v){document.body.className=v==="light"?"theme-light":v==="ocean"?"theme-ocean":v==="sunset"?"theme-sunset":"";state.theme=v;save()}
+function enter(){if(!state.mood)return;$("#checkin").classList.add("hidden");$("#dashboard").classList.remove("hidden");const mood=state.mood;$("#greeting").textContent=`${mood==="Feliz"||mood==="Animado"?"Hoje promete":mood==="Triste"||mood==="Exausto"?"Vamos com calma":"Vamos nessa"}, criatura!`;$("#wolfLine").textContent=mood==="Triste"||mood==="Exausto"||mood==="Sobrecarregado"?"Hoje a meta é respeitar seu ritmo. Produtividade sem cuidado não é vitória. 💜":"Vamos organizar esse caos com elegância e um pouquinho de drama. 😂";$("#quote").textContent=state.tone==="Filosófica"?"“Nem todo dia precisa ser extraordinário; estar aqui já é parte da jornada.”":state.tone==="Séria e direta"?"“Prioridade definida. Próximo passo: executar.”":"“A vida não vem com manual, mas pelo menos agora tem calendário.”";render()}
+$("#moods").addEventListener("click",e=>{const b=e.target.closest("[data-mood]");if(!b)return;$$(".mood").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");state.mood=b.dataset.mood;$("#startBtn").disabled=false});
+$("#intensity").addEventListener("input",e=>{$("#intensityValue").textContent=e.target.value+"%";state.intensity=+e.target.value});
+$("#startBtn").addEventListener("click",()=>{const d=today();state.history=state.history.filter(h=>h.date!==d);state.history.push({date:d,mood:state.mood,intensity:state.intensity});save();enter()});
+$$("[data-tab]").forEach(b=>b.addEventListener("click",()=>{ $$(".nav [data-tab]").forEach(x=>x.classList.toggle("active",x===b));["home","calendar","diary","weekly","missions","reports","settings"].forEach(t=>$("#tab-"+t).classList.toggle("hidden",t!==b.dataset.tab));}));
+$$("[data-goto]").forEach(b=>b.addEventListener("click",()=>{$('[data-tab="calendar"]').click()}));
+$("#selectedDate").value=today();$("#selectedDate").addEventListener("change",render);
+const days=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];$("#weekdayChecks").innerHTML=days.map(d=>`<label style="font-size:12px"><input type="checkbox" value="${d}"> ${d}</label>`).join("");
+$("#repeat").addEventListener("change",()=>$("#customDays").classList.toggle("hidden",$("#repeat").value!=="custom"));
+$("#addTask").addEventListener("click",()=>{const name=$("#taskName").value.trim();if(!name){toast("Dê um nome para a atividade.");return}const repeat=$("#repeat").value,selected=$$("#weekdayChecks input:checked").map(x=>x.value);if(repeat==="custom"&&!selected.length){toast("Escolha pelo menos um dia.");return}const startTime=$("#taskTime").value||"",endTime=$("#taskEndTime").value||"";if(startTime&&endTime&&endTime<startTime){toast("A hora de término não pode ser anterior à hora de início.");return}state.tasks.push({id:Date.now().toString(36),name,time:startTime,endTime,date:$("#selectedDate").value||today(),repeat,days:selected,category:$("#taskCategory").value,notes:$("#taskNotes").value.trim()});$("#taskName").value="";$("#taskNotes").value="";$("#taskTime").value="08:00";$("#taskEndTime").value="";save();render();toast("Atividade adicionada à agenda! 🐺")});
+$("#theme").addEventListener("change",e=>setTheme(e.target.value));$("#tone").addEventListener("change",e=>{state.tone=e.target.value;save()});$("#drama").addEventListener("input",e=>{$("#dramaValue").textContent=e.target.value+"%";state.drama=+e.target.value;save()});
+$("#exportBtn").addEventListener("click",()=>download("wolfa-dados.json",JSON.stringify(state,null,2),"application/json"));
+$("#icsBtn").addEventListener("click",()=>{const lines=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//WOLFA//PT-BR"];state.tasks.forEach(t=>{const dt=t.date.replaceAll("-","")+"T"+t.time.replace(":","")+"00";lines.push("BEGIN:VEVENT","UID:"+t.id+"@wolfa","DTSTART:"+dt,"SUMMARY:"+t.name.replace(/[,\n;]/g," "),"END:VEVENT")});lines.push("END:VCALENDAR");download("wolfa-agenda.ics",lines.join("\r\n"),"text/calendar");});
+function download(name,data,type){const a=document.createElement("a"),u=URL.createObjectURL(new Blob([data],{type}));a.href=u;a.download=name;a.click();URL.revokeObjectURL(u)}
+const diaryFields=["diaryTitle","diaryColor","diaryMood","diaryEvent","diaryWin","diaryLearn","diaryDifferent","diaryCuriosity","diaryAbsurd","diaryMoment","diaryPeople","diarySenses","diaryEnergy","diaryTomorrow","diaryExtra"];
+function diaryAnswers(){const labels={diaryTitle:"Título do dia",diaryColor:"Cor do dia",diaryMood:"Emoção predominante",diaryEvent:"Situação marcante",diaryWin:"Pequena ou grande vitória",diaryLearn:"Percepção sobre mim",diaryDifferent:"Algo diferente que vi",diaryCuriosity:"Curiosidade do dia",diaryAbsurd:"Pensamento aleatório",diaryMoment:"Momento para guardar",diaryPeople:"Pessoas e conversas",diarySenses:"Trilha sensorial",diaryEnergy:"Energia",diaryTomorrow:"Para amanhã",diaryExtra:"Outros detalhes"};return diaryFields.map(id=>({id,label:labels[id],value:$("#"+id).value.trim()})).filter(x=>x.value)}
+function makeDiarySummary(answers){if(!answers.length)return "";const intro=answers.find(x=>x.id==="diaryTitle");const mood=answers.find(x=>x.id==="diaryMood");const sections=[["O retrato do dia",["diaryTitle","diaryColor","diaryMood","diaryEnergy"]],["O que aconteceu",["diaryEvent","diaryMoment","diaryPeople"]],["Descobertas e detalhes",["diaryDifferent","diaryCuriosity","diaryAbsurd","diarySenses"]],["Conquistas e aprendizados",["diaryWin","diaryLearn"]],["O que fica para depois",["diaryTomorrow","diaryExtra"]]];let out=(intro?"# "+intro.value+"\\n\\n":"# Registro do dia\\n\\n");sections.forEach(([title,ids])=>{const rows=answers.filter(a=>ids.includes(a.id));if(rows.length){out+=title+"\\n"+rows.map(a=>"• "+a.label+": "+a.value).join("\\n")+"\\n\\n"}});return out.trim()}
+$("#generateDiarySummary").addEventListener("click",()=>{const a=diaryAnswers();if(!a.length){toast("Responda pelo menos uma pergunta primeiro.");return}$("#diarySummary").value=makeDiarySummary(a);toast("Organizei suas lembranças em um registro editável. ✨")});
+let editingDiaryId=null,editingDiaryDate=null;
+function clearDiaryForm(){diaryFields.concat(["diarySummary"]).forEach(id=>$("#"+id).value="");editingDiaryId=null;editingDiaryDate=null;$("#saveDiary").textContent="Salvar registro do dia"}
+$("#saveDiary").addEventListener("click",()=>{const answers=diaryAnswers();let summary=$("#diarySummary").value.trim();if(!summary&&answers.length)summary=makeDiarySummary(answers);if(!summary){toast("Escreva ou organize ao menos uma lembrança do dia.");return}const entry={id:editingDiaryId||Date.now().toString(36),date:editingDiaryDate||today(),title:$("#diaryTitle").value.trim(),color:$("#diaryColor").value,mood:$("#diaryMood").value,event:$("#diaryEvent").value.trim(),answers:Object.fromEntries(answers.map(a=>[a.id,a.value])),summary};state.diary=state.diary||[];if(editingDiaryId){const idx=state.diary.findIndex(x=>x.id===editingDiaryId);if(idx>=0)state.diary[idx]=entry;else state.diary.push(entry)}else state.diary.push(entry);save();clearDiaryForm();render();toast("Registro salvo. Sua história ficou guardada. 💜")});
+$("#saveWeek").addEventListener("click",()=>{state.weekNotes=state.weekNotes||[];state.weekNotes.push({date:today(),good:$("#wGood").value,hard:$("#wHard").value,next:$("#wNext").value});save();toast("Reflexão semanal salva. 🐺")});
+$("#resetBtn").addEventListener("click",()=>{if(confirm("Apagar os dados locais deste protótipo?")){localStorage.removeItem(KEY);location.reload()}});
+load();$("#theme").value=state.theme||"dark";$("#tone").value=state.tone||"Sarcástica";$("#drama").value=state.drama||80;$("#dramaValue").textContent=$("#drama").value+"%";setTheme(state.theme||"dark");
+if(state.mood&&state.history.some(h=>h.date===today())){const b=$(`[data-mood="${state.mood}"]`);if(b)b.classList.add("selected");$("#intensity").value=state.intensity;$("#intensityValue").textContent=state.intensity+"%";$("#startBtn").disabled=false}
+</script>
+</body>
+</html>
